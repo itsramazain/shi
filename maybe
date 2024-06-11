@@ -1,0 +1,38 @@
+proc group_numbers {n num_list} {
+    set groups {}
+    set current_group {}
+
+    # Sort the list first to ensure proper grouping
+    set num_list [lsort -integer $num_list]
+
+    foreach num $num_list {
+        if {[llength $current_group] == 0} {
+            lappend current_group $num
+        } else {
+            set group_valid 1
+            foreach val $current_group {
+                if {[expr abs($num - $val)] != 1} {
+                    set group_valid 0
+                    break
+                }
+            }
+            if {$group_valid} {
+                lappend current_group $num
+            } else {
+                lappend groups $current_group
+                set current_group [list $num]
+            }
+        }
+    }
+
+    if {[llength $current_group] > 0} {
+        lappend groups $current_group
+    }
+
+    return [llength $groups]
+}
+
+# Example usage
+set n 10
+set num_list {1 2 3 4 5 6 7 8 9 10}
+puts [group_numbers $n $num_list]
